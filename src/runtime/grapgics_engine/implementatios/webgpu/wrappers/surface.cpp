@@ -37,4 +37,4 @@ Surface::Surface(uint32_t width, uint32_t height, Instance const& instance, Adap
     wgpuSurfaceConfigure(_surface, &config);
 }
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

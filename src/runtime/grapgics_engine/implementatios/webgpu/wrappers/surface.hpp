@@ -8,7 +8,7 @@
 #include <runtime/common/exception.hpp>
 #include <runtime/common/nonmovable.h>
 
-#include <webgpu/webgpu.hpp>
+#include <webgpu/webgpu.h>
 
 struct GLFWwindow;
 
@@ -30,4 +30,4 @@ private:
     WGPUTextureFormat _surfaceFormat;
 };
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

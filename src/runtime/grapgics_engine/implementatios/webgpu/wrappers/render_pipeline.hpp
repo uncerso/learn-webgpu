@@ -5,9 +5,10 @@
 #include "surface.hpp"
 #include "resource_holder.hpp"
 
+#include <runtime/grapgics_engine/attribute.hpp>
 #include <runtime/grapgics_engine/pipeline_config.hpp>
 #include <runtime/grapgics_engine/resources.hpp>
-#include <webgpu/webgpu.hpp>
+#include <webgpu/webgpu.h>
 
 namespace runtime::graphics_engine::webgpu {
 
@@ -15,7 +16,12 @@ RESOURCE_HOLDER(RenderPipeline, WGPURenderPipeline, pipeline, wgpuRenderPipeline
 
 class RenderPipeline final : public RenderPipelineResourceHolder, public IRenderPipeline {
 public:
-    RenderPipeline(PipelineConfig config, ShaderModule const& shaderModule, Device const& device, Surface const& surface);
+    RenderPipeline(
+        PipelineConfig config,
+        ShaderModule const& shaderModule,
+        Device const& device,
+        Surface const& surface,
+        std::initializer_list<std::initializer_list<Attribute const>> vertexAttributes);
 };
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

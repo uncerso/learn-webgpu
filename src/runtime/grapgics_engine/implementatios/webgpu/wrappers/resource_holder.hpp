@@ -1,6 +1,7 @@
 #pragma once
 
 #include <runtime/common/move_only.h>
+#include <utility>
 
 namespace runtime::graphics_engine::webgpu {
 
@@ -35,4 +36,4 @@ private:                                                                    \
     }                                                                       \
 }
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

@@ -1,6 +1,8 @@
 #include "render_pass_encoder.hpp"
 #include "wrappers/render_pipeline.hpp"
 
+#include "mesh.hpp"
+
 #include <runtime/common/assert.hpp>
 
 namespace runtime::graphics_engine::webgpu {
@@ -38,4 +40,8 @@ void RenderPassEncoder::draw(uint32_t vertexCount) {
     wgpuRenderPassEncoderDraw(_encoder, vertexCount, 1, 0, 0);
 }
 
-} // runtime::graphics_engine::webgpu
+void RenderPassEncoder::draw(IMesh& mesh) {
+    static_cast<DrawableMesh*>(&mesh)->draw(_encoder);
+}
+
+} // namespace runtime::graphics_engine::webgpu

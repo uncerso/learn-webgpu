@@ -1,6 +1,7 @@
 #include "adapter.hpp"
 
 #include <runtime/common/assert.hpp>
+#include <string>
 
 namespace runtime::graphics_engine::webgpu {
 
@@ -40,4 +41,4 @@ Adapter::Adapter(Instance const& instance) {
     _adapter = requestAdapterSync(instance, &adapterOpts);
 }
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

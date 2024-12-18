@@ -4,13 +4,13 @@
 #include <iostream>
 
 int main() try {
-
-
     auto& window = core::Window::create(640, 480);
 
     auto& tasks = tasks::TaskRegistry::tasks();
     if (!tasks.empty()) {
-        window.render(tasks.back()->creator());
+        auto* task = tasks.back();
+        std::cout << "Selected task: '" << task->name() << "'" << std::endl;
+        window.render(task->creator());
     }
 
     return 0;

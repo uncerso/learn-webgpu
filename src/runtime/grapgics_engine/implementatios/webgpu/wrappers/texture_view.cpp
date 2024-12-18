@@ -38,4 +38,4 @@ std::optional<TextureView> TextureView::tryCreate(Surface const& surface) {
     return {{view}};
 }
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

@@ -11,6 +11,7 @@ struct IRenderPassEncoder : NonMovable {
 
     virtual void bindRenderPipeline(IRenderPipeline& pipeline) = 0;
     virtual void draw(uint32_t vertexCount) = 0;
+    virtual void draw(IMesh& mesh) = 0;
 };
 
-} // runtime::graphics_engine
+} // namespace runtime::graphics_engine

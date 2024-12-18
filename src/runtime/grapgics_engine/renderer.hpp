@@ -20,4 +20,4 @@ struct IRenderer : NonMovable {
 
 std::unique_ptr<IRenderer> createRenderer(uint32_t width, uint32_t height, GLFWwindow& window);
 
-} // runtime::graphics_engine
+} // namespace runtime::graphics_engine

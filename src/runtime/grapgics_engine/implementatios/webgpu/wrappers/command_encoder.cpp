@@ -12,4 +12,4 @@ CommandEncoder::CommandEncoder(Device const& device) {
     REQUIRE(_encoder, "Could not create WebGPU encoder");
 }
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

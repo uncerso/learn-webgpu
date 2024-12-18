@@ -1,4 +1,5 @@
 #include "task_registry.hpp"
+#include <algorithm>
 
 namespace tasks {
 
@@ -13,8 +14,9 @@ TaskRegistry::TaskRegistry() {
 }
 
 std::vector<TaskRegistry*> const& TaskRegistry::tasks() {
+    std::sort(g_allRegistries.begin(), g_allRegistries.end(), [](auto const* lhs, auto const* rhs) { return lhs->name() < rhs->name(); });
     return g_allRegistries;
 }
 
 
-} // tasks
+} // namespace tasks

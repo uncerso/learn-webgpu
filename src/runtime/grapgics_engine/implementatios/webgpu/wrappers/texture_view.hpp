@@ -3,7 +3,8 @@
 #include "surface.hpp"
 #include "resource_holder.hpp"
 
-#include <webgpu/webgpu.hpp>
+#include <webgpu/webgpu.h>
+#include <optional>
 
 namespace runtime::graphics_engine::webgpu {
 
@@ -18,4 +19,4 @@ public:
     static std::optional<TextureView> tryCreate(Surface const& surface);
 };
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

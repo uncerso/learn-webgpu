@@ -4,7 +4,7 @@
 #include "wrappers/texture_view.hpp"
 
 #include <runtime/grapgics_engine/render_pass_encoder.hpp>
-#include <webgpu/webgpu.hpp>
+#include <webgpu/webgpu.h>
 
 namespace runtime::graphics_engine::webgpu {
 
@@ -16,9 +16,10 @@ public:
 
     void bindRenderPipeline(IRenderPipeline& pipeline) override;
     void draw(uint32_t vertexCount) override;
+    void draw(IMesh& mesh) override;
 
 private:
     WGPURenderPassEncoder _encoder;
 };
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

@@ -3,7 +3,7 @@
 #include "adapter.hpp"
 #include "resource_holder.hpp"
 
-#include <webgpu/webgpu.hpp>
+#include <webgpu/webgpu.h>
 
 namespace runtime::graphics_engine::webgpu {
 
@@ -14,4 +14,4 @@ public:
     Device(Adapter const& adapter);
 };
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

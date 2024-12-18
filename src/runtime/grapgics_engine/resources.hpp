@@ -12,4 +12,4 @@ struct IRenderPipeline : NonMovable {
     virtual ~IRenderPipeline() = default;
 };
 
-} // runtime::graphics_engine
+} // namespace runtime::graphics_engine

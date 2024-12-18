@@ -10,6 +10,8 @@
 
 #include <runtime/grapgics_engine/renderer.hpp>
 
+#include <webgpu/wgpu.h>
+
 namespace runtime::graphics_engine::webgpu {
 
 class Renderer final : public IRenderer {
@@ -38,7 +40,7 @@ Renderer::Renderer(webgpu::Device&& device, webgpu::Surface&& surface, webgpu::Q
     : _device(std::move(device))
     , _surface(std::move(surface))
     , _queue(std::move(queue))
-    , _resourceManager(std::make_unique<ResourceManager>(_device, _surface))
+    , _resourceManager(std::make_unique<ResourceManager>(_device, _surface, _queue))
 {}
 
 IRenderPassEncoder& Renderer::renderPassEncoder() {
@@ -68,7 +70,7 @@ void Renderer::finishFrame() {
     wgpuDevicePoll(_device.device(), false, nullptr);
 }
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu
 
 namespace runtime::graphics_engine {
 
@@ -82,4 +84,4 @@ std::unique_ptr<IRenderer> createRenderer(uint32_t width, uint32_t height, GLFWw
     return std::make_unique<webgpu::Renderer>(std::move(device), std::move(surface), std::move(queue));
 }
 
-} // runtime::graphics_engine
+} // namespace runtime::graphics_engine

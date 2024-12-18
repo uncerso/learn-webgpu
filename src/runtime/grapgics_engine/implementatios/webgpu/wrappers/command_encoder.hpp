@@ -3,7 +3,7 @@
 #include "device.hpp"
 #include "resource_holder.hpp"
 
-#include <webgpu/webgpu.hpp>
+#include <webgpu/webgpu.h>
 
 namespace runtime::graphics_engine::webgpu {
 
@@ -14,4 +14,4 @@ public:
     CommandEncoder(Device const& device);
 };
 
-} // runtime::graphics_engine::webgpu
+} // namespace runtime::graphics_engine::webgpu

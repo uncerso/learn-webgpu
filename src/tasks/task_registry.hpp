@@ -18,4 +18,4 @@ struct TaskRegistry {
     virtual RendererCreator creator() const noexcept = 0;
 };
 
-} // tasks
+} // namespace tasks
