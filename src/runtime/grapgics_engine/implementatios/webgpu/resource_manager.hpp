@@ -18,6 +18,7 @@ public:
 
 protected:
     std::unique_ptr<IMesh> createMesh(std::span<BinaryVertices const> vertices) override;
+    std::unique_ptr<IMesh> createIndexedMesh(BinaryVertices const& indices, std::span<std::span<std::byte const> const> vertices) override;
 
 private:
     Device& _device;

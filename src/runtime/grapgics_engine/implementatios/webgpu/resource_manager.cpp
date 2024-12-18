@@ -25,4 +25,8 @@ std::unique_ptr<IMesh> ResourceManager::createMesh(std::span<BinaryVertices cons
     return std::make_unique<Mesh>(_device, _queue, vertices);
 }
 
+std::unique_ptr<IMesh> ResourceManager::createIndexedMesh(BinaryVertices const& indices, std::span<std::span<std::byte const> const> vertices) {
+    return std::make_unique<IndexedMesh>(_device, _queue, vertices, indices);
+}
+
 } // namespace runtime::graphics_engine::webgpu
