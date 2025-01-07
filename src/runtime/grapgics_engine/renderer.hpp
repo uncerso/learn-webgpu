@@ -2,6 +2,7 @@
 
 #include "resource_manager.hpp"
 #include "render_pass_encoder.hpp"
+#include <glm/glm.hpp>
 #include <memory>
 
 struct GLFWwindow;
@@ -14,7 +15,7 @@ struct IRenderer : NonMovable {
     virtual IResourceManager& resourceManager() = 0;
     virtual IRenderPassEncoder& renderPassEncoder() = 0;
 
-    virtual bool tryStartFrame() = 0;
+    virtual bool tryStartFrame(glm::vec4 const& clearColor) = 0;
     virtual void finishFrame() = 0;
 };
 

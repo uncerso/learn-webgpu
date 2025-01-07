@@ -36,11 +36,13 @@ struct FirstTriangleRenderer : public core::Renderer {
         : pipeline(manager.createRenderPipeline({}, shaderSource))
     {}
 
-    void render(runtime::graphics_engine::IRenderer& renderer) override {
-        auto& encoder = renderer.renderPassEncoder();
+    void render(FrameContext const& context) override {
+        auto& encoder = context.renderer.renderPassEncoder();
         encoder.bindRenderPipeline(*pipeline);
         encoder.draw(3);
     }
+
+    glm::vec4 bgColor() const noexcept override { return {0.9, 0.1, 0.2, 1.0}; }
 
     std::unique_ptr<runtime::graphics_engine::IRenderPipeline> pipeline;
 };

@@ -8,7 +8,7 @@ Mesh::Mesh(Device const& device, Queue const& queue, std::span<BinaryVertices co
     _vertexBuffers.reserve(vertices.size());
 
     for (auto const& binVertices : vertices)
-        _vertexBuffers.push_back(Buffer{device, queue, binVertices.vertices, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Vertex});
+        _vertexBuffers.push_back(Buffer{device, queue, binVertices.vertices, Buffer::Type::Vertex});
 }
 
 void Mesh::draw(WGPURenderPassEncoder const& encoder) {
@@ -20,14 +20,14 @@ void Mesh::draw(WGPURenderPassEncoder const& encoder) {
 }
 
 IndexedMesh::IndexedMesh(Device const& device, Queue const& queue, std::span<std::span<std::byte const> const> vertices, BinaryVertices const& indices)
-    : _indexBuffer{device, queue, indices.vertices, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Index}
+    : _indexBuffer{device, queue, indices.vertices, Buffer::Type::Index}
     , _indexCount{static_cast<uint32_t>(indices.vertices.size() / indices.stride)}
     , _indexFormat(indices.stride == 2 ? WGPUIndexFormat_Uint16 : WGPUIndexFormat_Uint32)
 {
     _vertexBuffers.reserve(vertices.size());
 
     for (auto const& binVertices : vertices)
-        _vertexBuffers.emplace_back(device, queue, binVertices, WGPUBufferUsage_CopyDst | WGPUBufferUsage_Vertex);
+        _vertexBuffers.emplace_back(device, queue, binVertices, Buffer::Type::Vertex);
 }
 
 void IndexedMesh::draw(WGPURenderPassEncoder const& encoder) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "attribute.hpp"
+#include "layout.hpp"
 #include "resources.hpp"
 #include "pipeline_config.hpp"
 #include "binaty_vertices.hpp"
@@ -14,6 +15,9 @@ namespace runtime::graphics_engine {
 struct IResourceManager : NonMovable {
     virtual ~IResourceManager() = default;
 
+    template <typename Vertex>
+    std::shared_ptr<ITUniformBuffer<Vertex>> createUniformBuffer(Vertex const& data);
+
     template <typename ... Vertex, size_t ... N>
     std::unique_ptr<IMesh> createMesh(std::span<Vertex, N> const ... vertices);
 
@@ -23,9 +27,11 @@ struct IResourceManager : NonMovable {
     virtual std::unique_ptr<IRenderPipeline> createRenderPipeline(
         PipelineConfig config,
         char const* shaderModule,
-        std::initializer_list<std::initializer_list<Attribute const>> vertexAttributes = {}) = 0;
+        std::initializer_list<std::initializer_list<Attribute const>> vertexAttributes = {},
+        std::initializer_list<Layout const> layouts = {}) = 0;
 
 protected:
+    virtual std::shared_ptr<IUniformBuffer> createUniformBuffer(std::span<std::byte const> bytes) = 0;
     virtual std::unique_ptr<IMesh> createMesh(std::span<BinaryVertices const> vertices) = 0;
     virtual std::unique_ptr<IMesh> createIndexedMesh(BinaryVertices const& indices, std::span<std::span<std::byte const> const> vertices) = 0;
 };
@@ -51,6 +57,13 @@ std::unique_ptr<IMesh> IResourceManager::createMesh(std::span<Index, IN> const i
         .stride = sizeof(Index),
     };
     return createIndexedMesh(binIndices, binVertices);
+}
+
+template <typename Vertex>
+std::shared_ptr<ITUniformBuffer<Vertex>> IResourceManager::createUniformBuffer(Vertex const& data) {
+    return std::reinterpret_pointer_cast<ITUniformBuffer<Vertex>>(
+        createUniformBuffer(std::span{reinterpret_cast<std::byte const*>(&data), sizeof(Vertex)})
+    );
 }
 
 } // namespace runtime::graphics_engine

@@ -14,9 +14,11 @@ public:
     std::unique_ptr<IRenderPipeline> createRenderPipeline(
         PipelineConfig config,
         char const*  shaderModule,
-        std::initializer_list<std::initializer_list<Attribute const>> vertexAttributes = {}) override;
+        std::initializer_list<std::initializer_list<Attribute const>> vertexAttributes,
+        std::initializer_list<Layout const> layouts) override;
 
 protected:
+    std::shared_ptr<IUniformBuffer> createUniformBuffer(std::span<std::byte const> bytes) override;
     std::unique_ptr<IMesh> createMesh(std::span<BinaryVertices const> vertices) override;
     std::unique_ptr<IMesh> createIndexedMesh(BinaryVertices const& indices, std::span<std::span<std::byte const> const> vertices) override;
 

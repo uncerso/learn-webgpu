@@ -4,8 +4,10 @@
 #include "device.hpp"
 #include "surface.hpp"
 #include "resource_holder.hpp"
+#include "pipeline_layout.hpp"
 
 #include <runtime/grapgics_engine/attribute.hpp>
+#include <runtime/grapgics_engine/layout.hpp>
 #include <runtime/grapgics_engine/pipeline_config.hpp>
 #include <runtime/grapgics_engine/resources.hpp>
 #include <webgpu/webgpu.h>
@@ -21,7 +23,10 @@ public:
         ShaderModule const& shaderModule,
         Device const& device,
         Surface const& surface,
-        std::initializer_list<std::initializer_list<Attribute const>> vertexAttributes);
+        std::initializer_list<std::initializer_list<Attribute const>> vertexAttributes,
+        std::initializer_list<Layout const> layouts);
+
+    PipelineLayout const layout;
 };
 
 } // namespace runtime::graphics_engine::webgpu

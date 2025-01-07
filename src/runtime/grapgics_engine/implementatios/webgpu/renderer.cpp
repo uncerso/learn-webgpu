@@ -21,7 +21,7 @@ public:
     IResourceManager& resourceManager() override { return *_resourceManager; }
     IRenderPassEncoder& renderPassEncoder() override;
 
-    bool tryStartFrame() override;
+    bool tryStartFrame(glm::vec4 const& clearColor) override;
     void finishFrame() override;
 
 private:
@@ -48,14 +48,14 @@ IRenderPassEncoder& Renderer::renderPassEncoder() {
     return *_renderPassEncoder;
 }
 
-bool Renderer::tryStartFrame() {
+bool Renderer::tryStartFrame(glm::vec4 const& clearColor) {
     REQUIRE(!_encoder, "A frame was already started");
     _textureView = TextureView::tryCreate(_surface);
     if (!_textureView)
         return false;
 
     _encoder.emplace(_device);
-    _renderPassEncoder.emplace(*_encoder, *_textureView);
+    _renderPassEncoder.emplace(*_encoder, *_textureView, _device, clearColor);
     return true;
 }
 

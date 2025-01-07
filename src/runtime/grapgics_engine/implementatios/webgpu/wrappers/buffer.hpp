@@ -13,9 +13,15 @@ namespace runtime::graphics_engine::webgpu {
 
 RESOURCE_HOLDER(Buffer, WGPUBuffer, buffer, wgpuBufferRelease);
 
-class Buffer final : public BufferResourceHolder {
+class Buffer : public BufferResourceHolder {
 public:
-    Buffer(Device const& device, Queue const& queue, std::span<std::byte const> bytes, WGPUBufferUsageFlags usage);
+    enum class Type { Vertex, Index, Uniform };
+
+    Buffer(Device const& device, Queue const& queue, std::span<std::byte const> bytes, Type type);
+    void rewrite(std::span<std::byte const> bytes, size_t startPos = 0);
+
+private:
+    Queue const& _queue;
 };
 
 } // namespace runtime::graphics_engine::webgpu

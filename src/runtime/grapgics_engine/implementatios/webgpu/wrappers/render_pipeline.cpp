@@ -112,7 +112,9 @@ RenderPipeline::RenderPipeline(
     ShaderModule const& shaderModule,
     Device const& device,
     Surface const& surface,
-    std::initializer_list<std::initializer_list<Attribute const>> vertexAttributes)
+    std::initializer_list<std::initializer_list<Attribute const>> vertexAttributes,
+    std::initializer_list<Layout const> layouts)
+    : layout(device, layouts)
 {
     WGPURenderPipelineDescriptor pipelineDesc = {};
     pipelineDesc.nextInChain = nullptr;
@@ -180,7 +182,7 @@ RenderPipeline::RenderPipeline(
     // Default value as well (irrelevant for count = 1 anyways)
     pipelineDesc.multisample.alphaToCoverageEnabled = false;
 
-    pipelineDesc.layout = nullptr;
+    pipelineDesc.layout = layout.layout();
 
     _pipeline = wgpuDeviceCreateRenderPipeline(device.device(), &pipelineDesc);
 }

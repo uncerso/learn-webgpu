@@ -88,13 +88,16 @@ Window::ExitReason Window::render(RendererCreator creator) {
     // glfwGetFramebufferSize(window, &w, &h);
 
     while (!_exitReason && !glfwWindowShouldClose(_window)) {
-        // float render_time = float(glfwGetTime());
+        float renderTime = float(glfwGetTime());
         glfwPollEvents();
 
-        if (!_renderer->tryStartFrame())
+        if (!_renderer->tryStartFrame(renderer->bgColor()))
             continue;
 
-        renderer->render(*_renderer);
+        renderer->render({
+            .renderer = *_renderer,
+            .renderTime = renderTime,
+        });
 
         _renderer->finishFrame();
     }
