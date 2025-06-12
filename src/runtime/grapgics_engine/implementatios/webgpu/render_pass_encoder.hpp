@@ -12,7 +12,13 @@ namespace runtime::graphics_engine::webgpu {
 
 class RenderPassEncoder final : public IRenderPassEncoder {
 public:
-    RenderPassEncoder(CommandEncoder const& encoder, TextureView const& textureView, Device const& device, glm::vec4 const& clearColor);
+    RenderPassEncoder(
+        CommandEncoder const& encoder,
+        TextureView const& textureView,
+        std::optional<TextureView> const& depthStencilTextureView,
+        Device const& device,
+        glm::vec4 const& clearColor
+    );
 
     ~RenderPassEncoder();
 

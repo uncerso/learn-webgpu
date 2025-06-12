@@ -27,6 +27,9 @@ public:
         std::initializer_list<Layout const> layouts);
 
     PipelineLayout const layout;
+
+private:
+WGPUDepthStencilState setupDepthStencil(PipelineConfig const& config);
 };
 
 } // namespace runtime::graphics_engine::webgpu

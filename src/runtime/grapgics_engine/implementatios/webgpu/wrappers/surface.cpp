@@ -20,20 +20,20 @@ Surface::Surface(uint32_t width, uint32_t height, Instance const& instance, Adap
 {
     REQUIRE(_surface, "Could not create WebGPU surface");
 
-    WGPUSurfaceConfiguration config = {};
-    config.nextInChain = nullptr;
-    config.width = width;
-    config.height = height;
-
     _surfaceFormat = wgpuSurfaceGetPreferredFormat(_surface, adapter.adapter());
-    config.format = _surfaceFormat;
-    config.usage = WGPUTextureUsage_RenderAttachment;
-    config.device = device.device();
-    config.presentMode = WGPUPresentMode_Fifo;
-    config.alphaMode = WGPUCompositeAlphaMode_Auto;
-    // And we do not need any particular view format:
-    config.viewFormatCount = 0;
-    config.viewFormats = nullptr;
+    WGPUSurfaceConfiguration config {
+        .nextInChain = nullptr,
+        .device = device.device(),
+        .format = _surfaceFormat,
+        .usage = WGPUTextureUsage_RenderAttachment,
+        // And we do not need any particular view format:
+        .viewFormatCount = 0,
+        .viewFormats = nullptr,
+        .alphaMode = WGPUCompositeAlphaMode_Auto,
+        .width = width,
+        .height = height,
+        .presentMode = WGPUPresentMode_Fifo,
+    };
     wgpuSurfaceConfigure(_surface, &config);
 }
 

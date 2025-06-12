@@ -32,6 +32,8 @@ private:
     std::unique_ptr<ResourceManager> _resourceManager;
 
     std::optional<TextureView> _textureView;
+    std::optional<Texture> _depthStencilTexture;
+    std::optional<TextureView> _depthStencilTextureView;
     std::optional<CommandEncoder> _encoder;
     std::optional<RenderPassEncoder> _renderPassEncoder;
 };
@@ -41,7 +43,10 @@ Renderer::Renderer(webgpu::Device&& device, webgpu::Surface&& surface, webgpu::Q
     , _surface(std::move(surface))
     , _queue(std::move(queue))
     , _resourceManager(std::make_unique<ResourceManager>(_device, _surface, _queue))
-{}
+{
+    _depthStencilTexture = Texture::makeDepthTexture(_device, WGPUTextureFormat_Depth24Plus);
+    _depthStencilTextureView = TextureView::create2DViewDepth(*_depthStencilTexture);
+}
 
 IRenderPassEncoder& Renderer::renderPassEncoder() {
     REQUIRE(_renderPassEncoder, "A frame is not started");
@@ -55,7 +60,7 @@ bool Renderer::tryStartFrame(glm::vec4 const& clearColor) {
         return false;
 
     _encoder.emplace(_device);
-    _renderPassEncoder.emplace(*_encoder, *_textureView, _device, clearColor);
+    _renderPassEncoder.emplace(*_encoder, *_textureView, _depthStencilTextureView, _device, clearColor);
     return true;
 }
 

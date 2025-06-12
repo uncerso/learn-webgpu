@@ -101,14 +101,19 @@ WGPURequiredLimits requiredLimits(Adapter const& adapter) {
 
 Device::Device(Adapter const& adapter) {
     auto limits = requiredLimits(adapter);
-    WGPUDeviceDescriptor deviceDesc = {};
-    deviceDesc.nextInChain = nullptr;
-    deviceDesc.label = "My Device"; // anything works here, that's your call
-    deviceDesc.requiredFeatureCount = 0; // we do not require any specific feature
-    deviceDesc.requiredLimits = &limits;
-    deviceDesc.defaultQueue.nextInChain = nullptr;
-    deviceDesc.defaultQueue.label = "The default queue";
-    deviceDesc.deviceLostCallback = nullptr;
+    WGPUDeviceDescriptor deviceDesc {
+        .nextInChain = nullptr,
+        .label = "My Device", // anything works here, that's your call
+        .requiredFeatureCount = 0, // we do not require any specific feature
+        .requiredFeatures = nullptr,
+        .requiredLimits = &limits,
+        .defaultQueue {
+            .nextInChain = nullptr,
+            .label = "The default queue",
+        },
+        .deviceLostCallback = nullptr,
+        .deviceLostUserdata = nullptr,
+    };
     _device = requestDeviceSync(adapter, &deviceDesc);
 
     wgpuDeviceSetUncapturedErrorCallback(_device, onDeviceError, nullptr /* pUserData */);

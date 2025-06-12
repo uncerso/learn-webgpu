@@ -7,28 +7,35 @@ namespace runtime::graphics_engine::webgpu {
 namespace {
 
 WGPUBindGroupLayoutEntry defaultBindGroupLayoutEntry() {
-    WGPUBindGroupLayoutEntry bindingLayout{};
-    bindingLayout.nextInChain = nullptr;
+    return {
+        .nextInChain = nullptr,
 
-    bindingLayout.buffer.nextInChain = nullptr;
-    bindingLayout.buffer.type = WGPUBufferBindingType_Undefined;
-    bindingLayout.buffer.hasDynamicOffset = false;
-    bindingLayout.buffer.minBindingSize = 0;
+        .buffer {
+            .nextInChain = nullptr,
+            .type = WGPUBufferBindingType_Undefined,
+            .hasDynamicOffset = false,
+            .minBindingSize = 0,
+        },
 
-    bindingLayout.sampler.nextInChain = nullptr;
-    bindingLayout.sampler.type = WGPUSamplerBindingType_Undefined;
+        .sampler {
+            .nextInChain = nullptr,
+            .type = WGPUSamplerBindingType_Undefined,
+        },
 
-    bindingLayout.storageTexture.nextInChain = nullptr;
-    bindingLayout.storageTexture.access = WGPUStorageTextureAccess_Undefined;
-    bindingLayout.storageTexture.format = WGPUTextureFormat_Undefined;
-    bindingLayout.storageTexture.viewDimension = WGPUTextureViewDimension_Undefined;
+        .texture {
+            .nextInChain = nullptr,
+            .sampleType = WGPUTextureSampleType_Undefined,
+            .viewDimension = WGPUTextureViewDimension_Undefined,
+            .multisampled = false,
+        },
 
-    bindingLayout.texture.nextInChain = nullptr;
-    bindingLayout.texture.multisampled = false;
-    bindingLayout.texture.sampleType = WGPUTextureSampleType_Undefined;
-    bindingLayout.texture.viewDimension = WGPUTextureViewDimension_Undefined;
-
-    return bindingLayout;
+        .storageTexture {
+            .nextInChain = nullptr,
+            .access = WGPUStorageTextureAccess_Undefined,
+            .format = WGPUTextureFormat_Undefined,
+            .viewDimension = WGPUTextureViewDimension_Undefined,
+        },
+    };
 }
 
 WGPUShaderStageFlags toWGPU(Layout::Access access) {
@@ -49,21 +56,25 @@ PipelineLayout::PipelineLayout(Device const& device, std::initializer_list<Layou
     for (auto const& layout : layouts) {
         auto bindingLayout = defaultBindGroupLayoutEntry();
         bindingLayout.buffer.type = WGPUBufferBindingType_Uniform;
+        ASSERT(_bindGroupLayouts.size() == layout.bindingPoint); // TODO
         bindingLayout.binding = layout.bindingPoint;
         bindingLayout.visibility = toWGPU(layout.access);
 
-        WGPUBindGroupLayoutDescriptor bindGroupLayoutDesc{};
-        bindGroupLayoutDesc.nextInChain = nullptr;
-        bindGroupLayoutDesc.label = nullptr;
-        bindGroupLayoutDesc.entryCount = 1;
-        bindGroupLayoutDesc.entries = &bindingLayout;
+        WGPUBindGroupLayoutDescriptor bindGroupLayoutDesc {
+            .nextInChain = nullptr,
+            .label = nullptr,
+            .entryCount = 1,
+            .entries = &bindingLayout,
+        };
         _bindGroupLayouts.push_back(wgpuDeviceCreateBindGroupLayout(device.device(), &bindGroupLayoutDesc));
     }
 
-    WGPUPipelineLayoutDescriptor layoutDesc{};
-    layoutDesc.nextInChain = nullptr;
-    layoutDesc.bindGroupLayoutCount = _bindGroupLayouts.size();
-    layoutDesc.bindGroupLayouts = _bindGroupLayouts.data();
+    WGPUPipelineLayoutDescriptor layoutDesc {
+        .nextInChain = nullptr,
+        .label = nullptr,
+        .bindGroupLayoutCount = _bindGroupLayouts.size(),
+        .bindGroupLayouts = _bindGroupLayouts.data(),
+    };
     _layout = wgpuDeviceCreatePipelineLayout(device.device(), &layoutDesc);
 }
 

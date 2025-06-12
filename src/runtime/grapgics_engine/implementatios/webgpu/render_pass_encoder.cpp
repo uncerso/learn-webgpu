@@ -20,7 +20,13 @@ WGPUColor toWGPU(glm::vec4 const& color) {
 
 } // namespace
 
-RenderPassEncoder::RenderPassEncoder(CommandEncoder const& encoder, TextureView const& textureView, Device const& device, glm::vec4 const& clearColor)
+RenderPassEncoder::RenderPassEncoder(
+    CommandEncoder const& encoder,
+    TextureView const& textureView,
+    std::optional<TextureView> const& depthStencilTextureView,
+    Device const& device,
+    glm::vec4 const& clearColor
+)
     : _device(device)
 {
     WGPURenderPassColorAttachment renderPassColorAttachment = {};
@@ -35,8 +41,27 @@ RenderPassEncoder::RenderPassEncoder(CommandEncoder const& encoder, TextureView 
     renderPassDesc.nextInChain = nullptr;
     renderPassDesc.colorAttachmentCount = 1;
     renderPassDesc.colorAttachments = &renderPassColorAttachment;
-    renderPassDesc.depthStencilAttachment = nullptr;
+    renderPassDesc.occlusionQuerySet = nullptr;
     renderPassDesc.timestampWrites = nullptr;
+
+    // We now add a depth/stencil attachment:
+    WGPURenderPassDepthStencilAttachment depthStencilAttachment {
+        .view = depthStencilTextureView ? depthStencilTextureView->view() : nullptr,
+        // Operation settings comparable to the color attachment
+        .depthLoadOp = WGPULoadOp_Clear,
+        .depthStoreOp = WGPUStoreOp_Store,
+        .depthClearValue = 1.0f,
+        // we could turn off writing to the depth buffer globally here
+        .depthReadOnly = false,
+
+        // Stencil setup, mandatory but unused
+        .stencilLoadOp = WGPULoadOp_Clear,
+        .stencilStoreOp = WGPUStoreOp_Store,
+        .stencilClearValue = 0,
+        .stencilReadOnly = true,
+    };
+
+    renderPassDesc.depthStencilAttachment = depthStencilTextureView ? &depthStencilAttachment : nullptr;
 
     _encoder = wgpuCommandEncoderBeginRenderPass(encoder.encoder(), &renderPassDesc);
     REQUIRE(_encoder, "Could not create WebGPU render pass");
@@ -48,7 +73,10 @@ RenderPassEncoder::~RenderPassEncoder() {
 }
 
 void RenderPassEncoder::bindRenderPipeline(IRenderPipeline& pipeline) {
-    _activePipeline = static_cast<RenderPipeline*>(&pipeline);
+    auto* renderPipeline = static_cast<RenderPipeline*>(&pipeline);
+    if (_activePipeline == renderPipeline)
+        return;
+    _activePipeline = renderPipeline;
     wgpuRenderPassEncoderSetPipeline(_encoder, _activePipeline->pipeline());
 }
 

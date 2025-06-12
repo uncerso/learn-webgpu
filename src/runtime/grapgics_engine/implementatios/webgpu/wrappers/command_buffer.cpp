@@ -5,9 +5,10 @@
 namespace runtime::graphics_engine::webgpu {
 
 CommandBuffer::CommandBuffer(CommandEncoder const& encoder) {
-    WGPUCommandBufferDescriptor cmdBufferDescriptor = {};
-    cmdBufferDescriptor.nextInChain = nullptr;
-    cmdBufferDescriptor.label = "CommandBuffer";
+    WGPUCommandBufferDescriptor cmdBufferDescriptor {
+        .nextInChain = nullptr,
+        .label = "CommandBuffer",
+    };
     _buffer = wgpuCommandEncoderFinish(encoder.encoder(), &cmdBufferDescriptor);
     REQUIRE(_buffer, "Could not create WebGPU command buffer");
 }

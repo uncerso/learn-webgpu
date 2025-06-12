@@ -5,9 +5,10 @@
 namespace runtime::graphics_engine::webgpu {
 
 CommandEncoder::CommandEncoder(Device const& device) {
-    WGPUCommandEncoderDescriptor encoderDesc = {};
-    encoderDesc.nextInChain = nullptr;
-    encoderDesc.label = "CommandEncoder";
+    WGPUCommandEncoderDescriptor encoderDesc {
+        .nextInChain = nullptr,
+        .label = "CommandEncoder",
+    };
     _encoder = wgpuDeviceCreateCommandEncoder(device.device(), &encoderDesc);
     REQUIRE(_encoder, "Could not create WebGPU encoder");
 }

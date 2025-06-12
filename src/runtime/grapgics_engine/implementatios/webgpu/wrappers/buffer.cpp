@@ -34,11 +34,13 @@ size_t alignCapacity(size_t realSize, Buffer::Type type) {
 Buffer::Buffer(Device const& device, Queue const& queue, std::span<std::byte const> bytes, Type type)
     : _queue(queue)
 {
-    WGPUBufferDescriptor bufferDesc{};
-    bufferDesc.nextInChain = nullptr;
-    bufferDesc.size = alignCapacity(bytes.size(), type);
-    bufferDesc.usage = WGPUBufferUsage_CopyDst | toWGPU(type);
-    bufferDesc.mappedAtCreation = false;
+    WGPUBufferDescriptor bufferDesc {
+        .nextInChain = nullptr,
+        .label = nullptr,
+        .usage = static_cast<WGPUBufferUsageFlags>(WGPUBufferUsage_CopyDst | toWGPU(type)) ,
+        .size = alignCapacity(bytes.size(), type),
+        .mappedAtCreation = false,
+    };
     _buffer = wgpuDeviceCreateBuffer(device.device(), &bufferDesc);
 
     rewrite(bytes);

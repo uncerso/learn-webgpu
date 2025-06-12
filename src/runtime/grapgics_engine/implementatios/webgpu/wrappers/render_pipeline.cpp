@@ -105,6 +105,31 @@ size_t computeFlattenSize(std::initializer_list<std::initializer_list<Attribute 
     return size;
 }
 
+WGPUStencilFaceState defaultStencilFaceState() {
+    return {
+        .compare = WGPUCompareFunction_Always,
+        .failOp = WGPUStencilOperation_Keep,
+        .depthFailOp = WGPUStencilOperation_Keep,
+        .passOp = WGPUStencilOperation_Keep,
+    };
+}
+
+WGPUDepthStencilState defaultDepthStencilState() {
+    return {
+        .nextInChain = nullptr,
+        .format = WGPUTextureFormat_Undefined,
+        .depthWriteEnabled = false,
+        .depthCompare = WGPUCompareFunction_Always,
+        .stencilFront = defaultStencilFaceState(),
+        .stencilBack = defaultStencilFaceState(),
+        .stencilReadMask = 0xFFFFFFFF,
+        .stencilWriteMask = 0xFFFFFFFF,
+        .depthBias = 0,
+        .depthBiasSlopeScale = 0,
+        .depthBiasClamp = 0,
+    };
+}
+
 } // namespace
 
 RenderPipeline::RenderPipeline(
@@ -170,8 +195,8 @@ RenderPipeline::RenderPipeline(
     fragmentState.targets = &colorTarget;
     pipelineDesc.fragment = &fragmentState;
 
-    // We do not use stencil/depth testing for now
-    pipelineDesc.depthStencil = nullptr;
+    WGPUDepthStencilState depthStencilState = setupDepthStencil(config);
+    pipelineDesc.depthStencil = &depthStencilState;
 
     // Samples per pixel
     pipelineDesc.multisample.count = 1;
@@ -185,6 +210,18 @@ RenderPipeline::RenderPipeline(
     pipelineDesc.layout = layout.layout();
 
     _pipeline = wgpuDeviceCreateRenderPipeline(device.device(), &pipelineDesc);
+}
+
+WGPUDepthStencilState RenderPipeline::setupDepthStencil(PipelineConfig const&) {
+    WGPUTextureFormat depthTextureFormat = WGPUTextureFormat_Depth24Plus;
+    auto depthStencilState = defaultDepthStencilState();
+    depthStencilState.depthCompare = WGPUCompareFunction_Less;
+    depthStencilState.depthWriteEnabled = true;
+    depthStencilState.format = depthTextureFormat;
+    depthStencilState.stencilReadMask = 0;
+    depthStencilState.stencilWriteMask = 0;
+
+    return depthStencilState;
 }
 
 } // namespace runtime::graphics_engine::webgpu
